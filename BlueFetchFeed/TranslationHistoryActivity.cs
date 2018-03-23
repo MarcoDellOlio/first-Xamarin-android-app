@@ -13,14 +13,17 @@ using Android.Widget;
 
 namespace BlueFetchFeed
 {
-    [Activity(Label = "TranslationHistoryActivity")]
-    public class TranslationHistoryActivity : Activity
+    [Activity(Label = "@string/translationHistory")]
+    public class TranslationHistoryActivity : ListActivity
     {
-        protected override void OnCreate(Bundle savedInstanceState)
+        protected override void OnCreate(Bundle bundle)
         {
-            base.OnCreate(savedInstanceState);
-
+            base.OnCreate(bundle);
             // Create your application here
+            var phoneNumbers = Intent.Extras.GetStringArrayList("phone_numbers") ?? new string[0];
+            this.ListAdapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, phoneNumbers);
+        
+            
         }
     }
 }
