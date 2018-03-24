@@ -33,7 +33,6 @@ namespace BlueFetchFeed
             translateButton.Click += async (sender, e) =>
             {
                 var user = await GetData(username.Text, password.Text);
-                Console.WriteLine(user);
                 var intent = new Intent(this, typeof(Profile));
                 intent.PutExtra("User", JsonConvert.SerializeObject(user));
                 this.StartActivity(intent);
@@ -46,25 +45,31 @@ namespace BlueFetchFeed
 
         protected async Task<User> GetData(string username, string password)
         {
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var values = new Dictionary<string, string>
+            var cookieContainer = new CookieContainer(); // want to set/store this globally
+            var baseAddress = new Uri("https://bfsharingapp.bluefletch.com");
+            using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
+            using (HttpClient client = new HttpClient(handler) { BaseAddress = baseAddress }) 
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var values = new Dictionary<string, string>
                 {
                    { "username", username },
                    { "password", password }
                 };
 
-            var body = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync("https://bfsharingapp.bluefletch.com/login", body);
-            response.EnsureSuccessStatusCode();
-            using (HttpContent content = response.Content)
-            {
-                string responseBody = await response.Content.ReadAsStringAsync();
-                User user = JsonConvert.DeserializeObject<User>(responseBody);
-              
-                return user;
+                var body = new FormUrlEncodedContent(values);
+                var response = await client.PostAsync("https://bfsharingapp.bluefletch.com/login", body);
+                response.EnsureSuccessStatusCode();
+                using (HttpContent content = response.Content)
+                {
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    User user = JsonConvert.DeserializeObject<User>(responseBody);
+
+                    return user;
+                } 
             }
+          
         }
     }
 }
