@@ -1816,6 +1816,9 @@ namespace BlueFetchFeed
 			// aapt resource value: 0x7f0b0029
 			public const int image = 2131427369;
 			
+			// aapt resource value: 0x7f0b0075
+			public const int imageView1 = 2131427445;
+			
 			// aapt resource value: 0x7f0b0069
 			public const int info = 2131427433;
 			
@@ -1977,6 +1980,12 @@ namespace BlueFetchFeed
 			
 			// aapt resource value: 0x7f0b0056
 			public const int textView1 = 2131427414;
+			
+			// aapt resource value: 0x7f0b0073
+			public const int textView2 = 2131427443;
+			
+			// aapt resource value: 0x7f0b0074
+			public const int textView3 = 2131427444;
 			
 			// aapt resource value: 0x7f0b0067
 			public const int time = 2131427431;
@@ -2176,16 +2185,19 @@ namespace BlueFetchFeed
 			public const int notification_template_part_time = 2130968618;
 			
 			// aapt resource value: 0x7f04002b
-			public const int select_dialog_item_material = 2130968619;
+			public const int Profile = 2130968619;
 			
 			// aapt resource value: 0x7f04002c
-			public const int select_dialog_multichoice_material = 2130968620;
+			public const int select_dialog_item_material = 2130968620;
 			
 			// aapt resource value: 0x7f04002d
-			public const int select_dialog_singlechoice_material = 2130968621;
+			public const int select_dialog_multichoice_material = 2130968621;
 			
 			// aapt resource value: 0x7f04002e
-			public const int support_simple_spinner_dropdown_item = 2130968622;
+			public const int select_dialog_singlechoice_material = 2130968622;
+			
+			// aapt resource value: 0x7f04002f
+			public const int support_simple_spinner_dropdown_item = 2130968623;
 			
 			static Layout()
 			{

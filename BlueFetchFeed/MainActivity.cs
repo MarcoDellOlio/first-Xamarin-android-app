@@ -33,9 +33,12 @@ namespace BlueFetchFeed
         
             translateButton.Click += async (sender, e) =>
             {
-                var test = await GetData(username.Text, password.Text);
-                Console.WriteLine(test);
-
+                var user = await GetData(username.Text, password.Text);
+                Console.WriteLine(user);
+                var intent = new Intent(this, typeof(Profile));
+                intent.PutExtra("User", JsonConvert.SerializeObject(user));
+                this.StartActivity(intent);
+                this.Finish();
             };
 
             translationHistoryButton.Click += (sender, e) =>
