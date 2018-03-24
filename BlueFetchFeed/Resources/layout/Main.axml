@@ -10,17 +10,19 @@
         android:layout_height="wrap_content"
         android:id="@+id/textView1" />
     <EditText
-        android:text="1-855-XAMARIN"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/email" />
+        android:id="@+id/email"
+        android:text="test1"
+        android:hint="user" />
     <EditText
-        android:text="password"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/password" />
+        android:id="@+id/password"
+        android:text="pass1"
+        android:hint="password" />
     <Button
         android:id="@+id/TranslateButton"
         android:layout_width="match_parent"

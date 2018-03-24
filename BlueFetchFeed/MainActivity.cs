@@ -33,8 +33,9 @@ namespace BlueFetchFeed
         
             translateButton.Click += async (sender, e) =>
             {
-                String json = await GetData(username.Text, password.Text);
-                Console.Write(json);
+                var test = await GetData(username.Text, password.Text);
+                Console.WriteLine(test);
+
             };
 
             translationHistoryButton.Click += (sender, e) =>
@@ -48,34 +49,27 @@ namespace BlueFetchFeed
 
 
 
-        private async Task<String> GetData(string username, string password)
+        protected async Task<User> GetData(string username, string password)
         {
             HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var values = new Dictionary<string, string>
                 {
                    { "username", username },
                    { "password", password }
                 };
 
-            var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync("https://bfsharingapp.bluefletch.com/login", content);
-            var responseString = await response.Content.ReadAsStringAsync();
-            Console.WriteLine(responseString);
-            //string url = "https://bfsharingapp.bluefletch.com/login";
-            //HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(new Uri(url));
-            //request.Method = "GET";
-            //request.ContentType = "application/json";
-
-            //// Send the request to the server and wait for the response:
-            //WebResponse response = await request.GetResponseAsync();
-           
-            //        // Use this stream to build a JSON document object
-            //var dataStream = response.GetResponseStream();
-            //StreamReader reader = new StreamReader(dataStream);
-            //string responseFromServer = reader.ReadToEnd();
-            //Console.WriteLine(responseFromServer);
-
-            return "test";
+            var body = new FormUrlEncodedContent(values);
+            var response = await client.PostAsync("https://bfsharingapp.bluefletch.com/login", body);
+            response.EnsureSuccessStatusCode();
+            using (HttpContent content = response.Content)
+            {
+                string responseBody = await response.Content.ReadAsStringAsync();
+                User user = JsonConvert.DeserializeObject<User>(responseBody);
+              
+                return user;
+            }
         }
     }
 }
