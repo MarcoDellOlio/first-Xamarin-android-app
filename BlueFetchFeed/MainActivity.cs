@@ -29,7 +29,6 @@ namespace BlueFetchFeed
             EditText password = FindViewById<EditText>(Resource.Id.password);
             TextView translatedPhoneWord = FindViewById<TextView>(Resource.Id.TranslatedPhoneWord);
             Button translateButton = FindViewById<Button>(Resource.Id.TranslateButton);
-            Button translationHistoryButton = FindViewById<Button>(Resource.Id.TranslationHistoryButton);
         
             translateButton.Click += async (sender, e) =>
             {
@@ -39,13 +38,6 @@ namespace BlueFetchFeed
                 intent.PutExtra("User", JsonConvert.SerializeObject(user));
                 this.StartActivity(intent);
                 this.Finish();
-            };
-
-            translationHistoryButton.Click += (sender, e) =>
-            {
-                var intent = new Intent(this, typeof(TranslationHistoryActivity));
-                intent.PutStringArrayListExtra("phone_numbers", phoneNumbers);
-                StartActivity(intent);
             };
 
         }

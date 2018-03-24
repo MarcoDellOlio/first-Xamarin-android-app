@@ -27,16 +27,10 @@
         android:id="@+id/TranslateButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Translate" />
+        android:text="Log In" />
     <TextView
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/TranslatedPhoneWord" />
-    <Button
-        android:text="@string/translationHistory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/TranslationHistoryButton"
-        android:enabled="true" />
 </LinearLayout>
