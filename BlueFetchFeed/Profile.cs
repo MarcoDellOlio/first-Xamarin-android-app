@@ -39,13 +39,17 @@ namespace BlueFetchFeed
             user = JsonConvert.DeserializeObject<User>(Intent.GetStringExtra("User"));
 
             title.Text = $"{user.username} profile page";
+
             String url = "https://bfsharingapp.bluefletch.com" + user.imageUrl;
             var imageBitmap = GetImageBitmapFromUrl(url);
             imageView.SetImageBitmap(imageBitmap);
 
-            var feeds = await GetFeed();
-            Console.WriteLine(feeds[0].postText);
-            List<string> feedText = feeds.Select(feed => feed.postText).ToList();
+            var allFeeds = await GetFeed();
+            Console.WriteLine(allFeeds.GetType());
+            var userFeeds = allFeeds.Where(feed => feed.postUser.username == user.username); 
+            var orederedFeed = userFeeds.OrderByDescending(feed => DateTime.Parse(feed.lastUpdatedDate)).ToList();
+
+            List<string> feedText = orederedFeed.Select(feed => feed.postText).ToList();
             ArrayAdapter<string> adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, feedText);
             feedlist.Adapter = adapter;
 
