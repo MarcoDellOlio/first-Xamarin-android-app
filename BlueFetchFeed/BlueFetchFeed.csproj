@@ -87,6 +87,7 @@
     <Compile Include="User.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="Feed.cs" />
+    <Compile Include="UserInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

@@ -10,13 +10,14 @@ using Android.App;
 using Android.Content;
 using Android.Widget;
 using Android.OS;
+using System.Linq;
 
 namespace BlueFetchFeed
 {
     [Activity(Label = "Phone Word", MainLauncher = true)]
     public class MainActivity : Activity
     {
-        static readonly List<string> phoneNumbers = new List<string>();
+        public static IEnumerable<Cookie> userCookies { get;  set;}
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -45,30 +46,37 @@ namespace BlueFetchFeed
 
         protected async Task<User> GetData(string username, string password)
         {
-            var cookieContainer = new CookieContainer(); // want to set/store this globally
-            var baseAddress = new Uri("https://bfsharingapp.bluefletch.com");
-            using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
-            using (HttpClient client = new HttpClient(handler) { BaseAddress = baseAddress }) 
-            {
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var values = new Dictionary<string, string>
-                {
-                   { "username", username },
-                   { "password", password }
-                };
+           
+            CookieContainer cookies = new CookieContainer();
+            HttpClientHandler handler = new HttpClientHandler();
+            handler.CookieContainer = cookies;
 
-                var body = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync("https://bfsharingapp.bluefletch.com/login", body);
+            HttpClient client = new HttpClient(handler);
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var values = new Dictionary<string, string>
+            {
+               { "username", username },
+               { "password", password }
+            };
+
+            var body = new FormUrlEncodedContent(values);
+            var response = await client.PostAsync("https://bfsharingapp.bluefletch.com/login", body);
                 response.EnsureSuccessStatusCode();
                 using (HttpContent content = response.Content)
                 {
                     string responseBody = await response.Content.ReadAsStringAsync();
                     User user = JsonConvert.DeserializeObject<User>(responseBody);
+                    Uri uri = new Uri("https://bfsharingapp.bluefletch.com");
+                    IEnumerable<Cookie> responseCookies = cookies.GetCookies(uri).Cast<Cookie>();
+                    userCookies = responseCookies;
+                    foreach (Cookie cookie in responseCookies)
+                        Console.WriteLine(cookie.Name + ": " + cookie.Value);
 
+                    Console.ReadLine();
                     return user;
                 } 
-            }
+            
           
         }
     }

@@ -3,8 +3,6 @@ namespace BlueFetchFeed
 {
     public class UserInfo
     {
-        public UserInfo()
-        {
-        }
+        public static System.Net.CookieContainer CookieContainer = new System.Net.CookieContainer();
     }
 }
