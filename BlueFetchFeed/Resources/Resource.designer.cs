@@ -1795,6 +1795,9 @@ namespace BlueFetchFeed
 			// aapt resource value: 0x7f0b003d
 			public const int expanded_menu = 2131427389;
 			
+			// aapt resource value: 0x7f0b0074
+			public const int feeds = 2131427444;
+			
 			// aapt resource value: 0x7f0b0004
 			public const int home = 2131427332;
 			

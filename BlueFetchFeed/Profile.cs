@@ -24,6 +24,7 @@ namespace BlueFetchFeed
     public class Profile : Activity
     {
         private User user;
+        private ListView feedlist;
         protected override async void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -33,7 +34,7 @@ namespace BlueFetchFeed
 
             TextView title = FindViewById<TextView>(Resource.Id.profiletitle);
             ImageView imageView = FindViewById<ImageView>(Resource.Id.profilepicture);
-
+            feedlist = FindViewById<ListView>(Resource.Id.feeds);
 
             user = JsonConvert.DeserializeObject<User>(Intent.GetStringExtra("User"));
 
@@ -41,10 +42,14 @@ namespace BlueFetchFeed
             String url = "https://bfsharingapp.bluefletch.com" + user.imageUrl;
             var imageBitmap = GetImageBitmapFromUrl(url);
             imageView.SetImageBitmap(imageBitmap);
-                
-            var feed = await GetFeed();
-        }
 
+            var feeds = await GetFeed();
+            Console.WriteLine(feeds[0].postText);
+            List<string> feedText = feeds.Select(feed => feed.postText).ToList();
+            ArrayAdapter<string> adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, feedText);
+            feedlist.Adapter = adapter;
+
+        }
 
         private Bitmap GetImageBitmapFromUrl(String url)
         {
@@ -62,7 +67,7 @@ namespace BlueFetchFeed
             return imageBitmap;
         }
 
-        protected async Task<Feed> GetFeed()
+        protected async Task<List<Feed>> GetFeed()
         {
             var baseAddress = new System.Uri("https://bfsharingapp.bluefletch.com");
             var cookieContainer = new CookieContainer();
@@ -79,13 +84,13 @@ namespace BlueFetchFeed
                     
                 var response = await client.GetAsync("/feed");
                 response.EnsureSuccessStatusCode();
-
                 using (HttpContent data = response.Content)
                 {
                     string responseBody = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine(responseBody);
-                    Feed feed = new Feed();
-                    return feed;
+
+                    List<Feed> feeds = JsonConvert.DeserializeObject<List<Feed>>(responseBody);
+                   
+                    return feeds;
                 }
             }
         }
