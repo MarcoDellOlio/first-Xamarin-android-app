@@ -138,8 +138,6 @@ namespace BlueFetchFeed
 
                     return responseBody;
                 }
-
-            
         }
     }
 }
