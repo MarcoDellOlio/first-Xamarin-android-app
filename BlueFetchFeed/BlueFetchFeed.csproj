@@ -107,6 +107,7 @@
     <Compile Include="Feed.cs" />
     <Compile Include="UserInfo.cs" />
     <Compile Include="Comment.cs" />
+    <Compile Include="BitmapHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

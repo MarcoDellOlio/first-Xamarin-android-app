@@ -2,27 +2,33 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
 
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
 using Android.Graphics;
-using Android.Net;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Java.IO;
+using Android.Provider;
+using Android.Content.PM;
 
 namespace BlueFetchFeed
 {
     [Activity(Label = "Profile")]
     public class Profile : Activity
-    {
+    {   
+        public static class App
+        {
+            public static File _file;
+            public static File _dir;
+            public static Bitmap bitmap;
+        }
+
         private User user;
         private ListView feedlist;
         protected override void OnCreate(Bundle savedInstanceState)
@@ -30,6 +36,16 @@ namespace BlueFetchFeed
             base.OnCreate(savedInstanceState);
 
             SetContentView(Resource.Layout.Profile);
+
+            if (IsThereAnAppToTakePictures())
+            {
+                CreateDirectoryForPictures();
+
+                Button button = FindViewById<Button>(Resource.Id.myButton);
+                button.Click += TakeAPicture;
+            }
+
+
 
 
             TextView title = FindViewById<TextView>(Resource.Id.profiletitle);
@@ -128,8 +144,8 @@ namespace BlueFetchFeed
                 };
                 
                 var body = new FormUrlEncodedContent(values);
-                    Console.WriteLine("name " + username);
-                    Console.WriteLine("text " + postText); 
+                System.Console.WriteLine("name " + username);
+                System.Console.WriteLine("text " + postText); 
                 var response = await client.PostAsync("https://bfsharingapp.bluefletch.com/post", body);
                 response.EnsureSuccessStatusCode();
                 using (HttpContent data = response.Content)
@@ -139,5 +155,63 @@ namespace BlueFetchFeed
                     return responseBody;
                 }
         }
+
+
+        private void CreateDirectoryForPictures()
+        {
+            App._dir = new File(
+                    Android.OS.Environment.GetExternalStoragePublicDirectory(
+                    Android.OS.Environment.DirectoryPictures), "CameraAppDemo");
+            if (!App._dir.Exists())
+            {
+                App._dir.Mkdirs();
+            }
+        }
+
+        private bool IsThereAnAppToTakePictures()
+        {
+            Intent intent = new Intent(MediaStore.ActionImageCapture);
+            IList<ResolveInfo> availableActivities =
+                PackageManager.QueryIntentActivities(intent, PackageInfoFlags.MatchDefaultOnly);
+            return availableActivities != null && availableActivities.Count > 0;
+        }
+
+        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        {
+            base.OnActivityResult(requestCode, resultCode, data);
+
+            // Make it available in the gallery
+
+            Intent mediaScanIntent = new Intent(Intent.ActionMediaScannerScanFile);
+            Uri contentUri = Uri.FromFile(App._file);
+            mediaScanIntent.SetData(contentUri);
+            SendBroadcast(mediaScanIntent);
+
+            // Display in ImageView. We will resize the bitmap to fit the display.
+            // Loading the full sized image will consume to much memory
+            // and cause the application to crash.
+
+            int height = Resources.DisplayMetrics.HeightPixels;
+            int width = _imageView.Height;
+            App.bitmap = App._file.Path.LoadAndResizeBitmap(width, height);
+            if (App.bitmap != null)
+            {
+                _imageView.SetImageBitmap(App.bitmap);
+                App.bitmap = null;
+            }
+
+            // Dispose of the Java side bitmap.
+            GC.Collect();
+        }
+
+        private void TakeAPicture(object sender, EventArgs eventArgs)
+        {
+            Intent intent = new Intent(MediaStore.ActionImageCapture);
+            App._file = new File(App._dir, String.Format("myPhoto_{0}.jpg", Guid.NewGuid()));
+            intent.PutExtra(MediaStore.ExtraOutput, Uri.FromFile(App._file));
+            StartActivityForResult(intent, 0);
+        }
+
+
     }
 }
