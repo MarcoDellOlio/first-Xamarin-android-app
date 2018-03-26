@@ -1732,6 +1732,9 @@ namespace BlueFetchFeed
 			// aapt resource value: 0x7f0b0013
 			public const int add = 2131427347;
 			
+			// aapt resource value: 0x7f0b0075
+			public const int addPost = 2131427445;
+			
 			// aapt resource value: 0x7f0b003b
 			public const int alertTitle = 2131427387;
 			
@@ -1795,8 +1798,8 @@ namespace BlueFetchFeed
 			// aapt resource value: 0x7f0b003d
 			public const int expanded_menu = 2131427389;
 			
-			// aapt resource value: 0x7f0b0074
-			public const int feeds = 2131427444;
+			// aapt resource value: 0x7f0b0076
+			public const int feeds = 2131427446;
 			
 			// aapt resource value: 0x7f0b0004
 			public const int home = 2131427332;
@@ -1863,6 +1866,9 @@ namespace BlueFetchFeed
 			
 			// aapt resource value: 0x7f0b0058
 			public const int password = 2131427416;
+			
+			// aapt resource value: 0x7f0b0074
+			public const int postText = 2131427444;
 			
 			// aapt resource value: 0x7f0b0073
 			public const int profilepicture = 2131427443;
